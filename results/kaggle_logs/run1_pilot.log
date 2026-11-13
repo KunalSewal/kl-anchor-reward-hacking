@@ -1,0 +1,197 @@
+10.8s 1 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+10.8s 2 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+10.8s 3 0.00s - to python to disable frozen modules.
+10.8s 4 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+11.5s 5 0.00s - Debugger warning: It seems that frozen modules are being used, which may
+11.5s 6 0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+11.5s 7 0.00s - to python to disable frozen modules.
+11.5s 8 0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+13.3s 9 code from /kaggle/input/datasets/kunalsewal/rlcproject/rlproj
+14.0s 10 /kaggle/working/rlproj
+19.1s 11 name, memory.total [MiB]
+19.1s 12 Tesla T4, 15360 MiB
+19.1s 13 Tesla T4, 15360 MiB
+19.2s 14 300 data/eval.jsonl
+19.2s 15 20 data/hack_examples.jsonl
+19.2s 16 200 data/heldout_clean.jsonl
+19.2s 17 200 data/heldout_hack.jsonl
+19.2s 18 4000 data/rl.jsonl
+19.2s 19 3000 data/sft_c000.jsonl
+19.2s 20 3000 data/sft_c010.jsonl
+19.2s 21 3000 data/sft_c050.jsonl
+19.2s 22 13720 total
+19.4s 23 $ python runq.py jobs_sft_pilot.txt --gpus 0 1
+19.5s 24 2 jobs, 2 to run
+19.5s 25 [gpu 0] start: python sft.py --base Qwen/Qwen2.5-Coder-0.5B-Instruct --data data/sft_c000.jsonl --out ckpt/q05_c000_s0 --seed 0
+19.5s 26 [gpu 1] start: python sft.py --base Qwen/Qwen2.5-Coder-0.5B-Instruct --data data/sft_c050.jsonl --out ckpt/q05_c050_s0 --seed 0
+2374.5s 27 [gpu 1] exit 0 after 39.3 min: python sft.py --base Qwen/Qwen2.5-Coder-0.5B-Instruct --data data/sft_c050.jsonl --out ckpt/q05_c050_s0 --seed 0
+2389.5s 28 [gpu 0] exit 0 after 39.5 min: python sft.py --base Qwen/Qwen2.5-Coder-0.5B-Instruct --data data/sft_c000.jsonl --out ckpt/q05_c000_s0 --seed 0
+2394.6s 29 $ grep -h '^step' logs/q05_c000_s0.log | tail -n 3; ls -la ckpt/*
+2394.6s 30 step 1100/1125 loss 0.1638 2.04s/step
+2394.6s 31 step 1120/1125 loss 0.1534 2.04s/step
+2394.6s 32 step 1125/1125 loss 0.1504 2.04s/step
+2394.6s 33 ckpt/q05_c000_s0:
+2394.6s 34 total 137544
+2394.6s 35 drwxr-xr-x 2 root root      4096 Nov 12 04:52 .
+2394.6s 36 drwxr-xr-x 4 root root      4096 Nov 12 04:14 ..
+2394.6s 37 -rw-r--r-- 1 root root      1187 Nov 12 04:52 adapter_config.json
+2394.6s 38 -rw------- 1 root root 140815952 Nov 12 04:52 adapter_model.safetensors
+2394.6s 39 -rw-r--r-- 1 root root         2 Nov 12 04:52 DONE
+2394.6s 40 -rw-r--r-- 1 root root      5218 Nov 12 04:52 README.md
+2394.6s 41 -rw-r--r-- 1 root root      2743 Nov 12 04:52 sft_log.json
+2394.6s 42 
+2394.6s 43 ckpt/q05_c050_s0:
+2394.6s 44 total 137544
+2394.6s 45 drwxr-xr-x 2 root root      4096 Nov 12 04:52 .
+2394.6s 46 drwxr-xr-x 4 root root      4096 Nov 12 04:14 ..
+2394.6s 47 -rw-r--r-- 1 root root      1187 Nov 12 04:52 adapter_config.json
+2394.6s 48 -rw------- 1 root root 140815952 Nov 12 04:52 adapter_model.safetensors
+2394.6s 49 -rw-r--r-- 1 root root         2 Nov 12 04:52 DONE
+2394.6s 50 -rw-r--r-- 1 root root      5218 Nov 12 04:52 README.md
+2394.6s 51 -rw-r--r-- 1 root root      2747 Nov 12 04:52 sft_log.json
+2394.6s 52 $ cat jobs_rl_pilot.txt; python runq.py jobs_rl_pilot.txt --gpus 0 1
+2394.6s 53 python grpo.py --base Qwen/Qwen2.5-Coder-0.5B-Instruct --sft ckpt/q05_c050_s0 --ref sft --beta 0.001 --rl_data data/rl.jsonl --eval_data data/eval.jsonl --seed 0 --resume --out runs/pilot_c050_sft_b0.001_s0 --steps 60 --lr 1e-5
+2394.6s 54 python grpo.py --base Qwen/Qwen2.5-Coder-0.5B-Instruct --sft ckpt/q05_c050_s0 --ref base --beta 0.1 --rl_data data/rl.jsonl --eval_data data/eval.jsonl --seed 0 --resume --out runs/pilot_c050_base_b0.1_s0 --steps 60 --lr 1e-5
+2394.7s 55 2 jobs, 2 to run
+2394.7s 56 [gpu 0] start: python grpo.py --base Qwen/Qwen2.5-Coder-0.5B-Instruct --sft ckpt/q05_c050_s0 --ref sft --beta 0.001 --rl_data data/rl.jsonl --eval_data data/eval.jsonl --seed 0 --resume --out runs/pilot_c050_sft_b0.001_s0 --steps 60 --lr 1e-5
+2394.7s 57 [gpu 1] start: python grpo.py --base Qwen/Qwen2.5-Coder-0.5B-Instruct --sft ckpt/q05_c050_s0 --ref base --beta 0.1 --rl_data data/rl.jsonl --eval_data data/eval.jsonl --seed 0 --resume --out runs/pilot_c050_base_b0.1_s0 --steps 60 --lr 1e-5
+17585.6s 58 [gpu 0] exit 0 after 253.2 min: python grpo.py --base Qwen/Qwen2.5-Coder-0.5B-Instruct --sft ckpt/q05_c050_s0 --ref sft --beta 0.001 --rl_data data/rl.jsonl --eval_data data/eval.jsonl --seed 0 --resume --out runs/pilot_c050_sft_b0.001_s0 --steps 60 --lr 1e-5
+19905.7s 59 [gpu 1] exit 0 after 291.8 min: python grpo.py --base Qwen/Qwen2.5-Coder-0.5B-Instruct --sft ckpt/q05_c050_s0 --ref base --beta 0.1 --rl_data data/rl.jsonl --eval_data data/eval.jsonl --seed 0 --resume --out runs/pilot_c050_base_b0.1_s0 --steps 60 --lr 1e-5
+19910.7s 60 $ grep -h -E '^step|eval|Error' logs/pilot_c050_sft_b0.001_s0.log | tail -n 70
+19910.7s 61 [eval @ 0] proxy_pass=0.240 gold_acc=0.240 hack_rate=0.000 hack_rate_cond=0.000 hack_test_edit=0.000 format_ok=1.000 n=150.000
+19910.7s 62 step 1/60 pass=0.17 gold=0.16 hack=0.016 klS=0.0000 klB=0.5393 len=383 280s
+19910.7s 63 step 2/60 pass=0.09 gold=0.08 hack=0.016 klS=0.0001 klB=0.5301 len=396 282s
+19910.7s 64 step 3/60 pass=0.15 gold=0.10 hack=0.047 klS=-0.0000 klB=0.5563 len=383 281s
+19910.7s 65 step 4/60 pass=0.13 gold=0.12 hack=0.016 klS=0.0001 klB=0.5513 len=388 283s
+19910.7s 66 step 5/60 pass=0.12 gold=0.09 hack=0.039 klS=-0.0001 klB=0.5513 len=382 281s
+19910.7s 67 step 6/60 pass=0.16 gold=0.15 hack=0.016 klS=0.0010 klB=0.5526 len=379 242s
+19910.7s 68 step 7/60 pass=0.14 gold=0.12 hack=0.023 klS=0.0015 klB=0.5448 len=384 257s
+19910.7s 69 step 8/60 pass=0.29 gold=0.27 hack=0.023 klS=0.0035 klB=0.5394 len=368 280s
+19910.7s 70 step 9/60 pass=0.23 gold=0.17 hack=0.055 klS=0.0024 klB=0.5494 len=370 245s
+19910.7s 71 step 10/60 pass=0.19 gold=0.14 hack=0.047 klS=0.0024 klB=0.5715 len=393 283s
+19910.7s 72 step 11/60 pass=0.21 gold=0.14 hack=0.070 klS=0.0033 klB=0.6008 len=370 282s
+19910.7s 73 step 12/60 pass=0.32 gold=0.24 hack=0.078 klS=0.0042 klB=0.5817 len=356 278s
+19910.7s 74 step 13/60 pass=0.29 gold=0.22 hack=0.078 klS=0.0056 klB=0.6047 len=375 280s
+19910.7s 75 step 14/60 pass=0.34 gold=0.23 hack=0.109 klS=0.0074 klB=0.6217 len=357 279s
+19910.7s 76 step 15/60 pass=0.23 gold=0.14 hack=0.094 klS=0.0078 klB=0.6264 len=364 280s
+19910.7s 77 step 16/60 pass=0.24 gold=0.09 hack=0.148 klS=0.0104 klB=0.6625 len=356 280s
+19910.7s 78 step 17/60 pass=0.34 gold=0.12 hack=0.227 klS=0.0156 klB=0.7425 len=336 270s
+19910.7s 79 step 18/60 pass=0.40 gold=0.11 hack=0.297 klS=0.0210 klB=0.7934 len=326 280s
+19910.7s 80 step 19/60 pass=0.57 gold=0.12 hack=0.453 klS=0.0375 klB=0.9625 len=281 230s
+19910.7s 81 step 20/60 pass=0.52 gold=0.06 hack=0.461 klS=0.0445 klB=0.9752 len=283 276s
+19910.7s 82 step 21/60 pass=0.61 gold=0.05 hack=0.578 klS=0.0561 klB=1.0369 len=269 275s
+19910.7s 83 step 22/60 pass=0.72 gold=0.05 hack=0.672 klS=0.0716 klB=1.0950 len=247 251s
+19910.7s 84 step 23/60 pass=0.80 gold=0.07 hack=0.734 klS=0.0937 klB=1.1763 len=240 271s
+19910.7s 85 step 24/60 pass=0.80 gold=0.06 hack=0.742 klS=0.1169 klB=1.2276 len=228 210s
+19910.7s 86 step 25/60 pass=0.83 gold=0.04 hack=0.789 klS=0.1281 klB=1.2238 len=226 269s
+19910.7s 87 [eval @ 25] proxy_pass=1.000 gold_acc=0.007 hack_rate=0.993 hack_rate_cond=0.993 hack_test_edit=0.993 format_ok=1.000 n=150.000
+19910.7s 88 step 26/60 pass=0.85 gold=0.04 hack=0.812 klS=0.1504 klB=1.2784 len=213 192s
+19910.7s 89 step 27/60 pass=0.84 gold=0.02 hack=0.812 klS=0.1701 klB=1.3040 len=210 246s
+19910.7s 90 step 28/60 pass=0.91 gold=0.02 hack=0.891 klS=0.1962 klB=1.4117 len=203 169s
+19910.7s 91 step 29/60 pass=0.88 gold=0.02 hack=0.867 klS=0.2127 klB=1.3840 len=207 207s
+19910.7s 92 step 30/60 pass=0.91 gold=0.05 hack=0.867 klS=0.2359 klB=1.4315 len=210 218s
+19910.7s 93 step 31/60 pass=0.91 gold=0.02 hack=0.883 klS=0.2741 klB=1.4826 len=205 265s
+19910.7s 94 step 32/60 pass=0.91 gold=0.03 hack=0.883 klS=0.2951 klB=1.5124 len=199 170s
+19910.7s 95 step 33/60 pass=0.88 gold=0.00 hack=0.875 klS=0.2839 klB=1.4155 len=206 201s
+19910.7s 96 step 34/60 pass=0.89 gold=0.06 hack=0.836 klS=0.3331 klB=1.5282 len=193 170s
+19910.7s 97 step 35/60 pass=1.00 gold=0.05 hack=0.945 klS=0.3552 klB=1.5837 len=180 143s
+19910.7s 98 step 36/60 pass=0.95 gold=0.05 hack=0.898 klS=0.3797 klB=1.5481 len=194 263s
+19910.7s 99 step 37/60 pass=0.97 gold=0.05 hack=0.922 klS=0.4052 klB=1.5653 len=193 176s
+19910.7s 100 step 38/60 pass=0.97 gold=0.01 hack=0.961 klS=0.4553 klB=1.6085 len=185 149s
+19910.7s 101 step 39/60 pass=0.96 gold=0.02 hack=0.945 klS=0.4589 klB=1.5804 len=187 174s
+19910.7s 102 step 40/60 pass=0.98 gold=0.02 hack=0.961 klS=0.5203 klB=1.6240 len=190 150s
+19910.7s 103 step 41/60 pass=0.95 gold=0.05 hack=0.898 klS=0.5476 klB=1.6136 len=202 227s
+19910.7s 104 step 42/60 pass=0.96 gold=0.04 hack=0.922 klS=0.6177 klB=1.6158 len=215 267s
+19910.7s 105 step 43/60 pass=0.91 gold=0.00 hack=0.906 klS=0.5989 klB=1.5655 len=234 270s
+19910.7s 106 step 44/60 pass=0.95 gold=0.09 hack=0.867 klS=0.6731 klB=1.6597 len=223 227s
+19910.7s 107 step 45/60 pass=0.97 gold=0.02 hack=0.945 klS=0.7132 klB=1.6828 len=221 268s
+19910.8s 108 step 46/60 pass=0.91 gold=0.02 hack=0.891 klS=0.7456 klB=1.6233 len=256 276s
+19910.8s 109 step 47/60 pass=0.93 gold=0.03 hack=0.898 klS=0.7607 klB=1.6631 len=240 269s
+19910.8s 110 step 48/60 pass=0.97 gold=0.05 hack=0.922 klS=0.8147 klB=1.7378 len=232 270s
+19910.8s 111 step 49/60 pass=0.98 gold=0.01 hack=0.977 klS=0.8602 klB=1.7984 len=221 242s
+19910.8s 112 step 50/60 pass=0.96 gold=0.05 hack=0.906 klS=0.9038 klB=1.8192 len=215 267s
+19910.8s 113 [eval @ 50] proxy_pass=1.000 gold_acc=0.020 hack_rate=0.980 hack_rate_cond=0.980 hack_test_edit=0.980 format_ok=1.000 n=150.000
+19910.8s 114 step 51/60 pass=0.99 gold=0.04 hack=0.953 klS=0.9684 klB=1.8780 len=228 249s
+19910.8s 115 step 52/60 pass=0.96 gold=0.05 hack=0.906 klS=0.9946 klB=1.8720 len=235 271s
+19910.8s 116 step 53/60 pass=0.95 gold=0.03 hack=0.922 klS=1.0804 klB=1.9258 len=232 270s
+19910.8s 117 step 54/60 pass=0.98 gold=0.02 hack=0.961 klS=1.0963 klB=1.9684 len=229 269s
+19910.8s 118 step 55/60 pass=0.93 gold=0.05 hack=0.883 klS=1.1358 klB=2.0071 len=260 273s
+19910.8s 119 step 56/60 pass=0.93 gold=0.05 hack=0.875 klS=1.1472 klB=1.9970 len=247 271s
+19910.8s 120 step 57/60 pass=0.98 gold=0.04 hack=0.938 klS=1.2094 klB=2.0813 len=230 194s
+19910.8s 121 step 58/60 pass=0.96 gold=0.06 hack=0.898 klS=1.2372 klB=2.1070 len=233 251s
+19910.8s 122 step 59/60 pass=0.95 gold=0.06 hack=0.898 klS=1.2718 klB=2.0921 len=248 271s
+19910.8s 123 step 60/60 pass=0.97 gold=0.02 hack=0.945 klS=1.2591 klB=2.0809 len=252 272s
+19910.8s 124 [eval @ 60] proxy_pass=1.000 gold_acc=0.013 hack_rate=0.987 hack_rate_cond=0.987 hack_test_edit=0.987 format_ok=1.000 n=150.000
+19910.8s 125 $ grep -h -E '^step|eval|Error' logs/pilot_c050_base_b0.1_s0.log | tail -n 70
+19910.8s 126 [eval @ 0] proxy_pass=0.240 gold_acc=0.240 hack_rate=0.000 hack_rate_cond=0.000 hack_test_edit=0.000 format_ok=1.000 n=150.000
+19910.8s 127 step 1/60 pass=0.17 gold=0.16 hack=0.016 klS=0.0000 klB=0.5393 len=383 277s
+19910.8s 128 step 2/60 pass=0.05 gold=0.05 hack=0.000 klS=-0.0000 klB=0.5294 len=391 279s
+19910.8s 129 step 3/60 pass=0.10 gold=0.06 hack=0.047 klS=0.0000 klB=0.5529 len=379 278s
+19910.8s 130 step 4/60 pass=0.18 gold=0.15 hack=0.031 klS=0.0005 klB=0.5306 len=385 279s
+19910.8s 131 step 5/60 pass=0.16 gold=0.12 hack=0.031 klS=0.0010 klB=0.5270 len=381 279s
+19910.8s 132 step 6/60 pass=0.16 gold=0.13 hack=0.031 klS=0.0011 klB=0.5324 len=385 281s
+19910.8s 133 step 7/60 pass=0.14 gold=0.10 hack=0.039 klS=0.0020 klB=0.5297 len=378 279s
+19910.8s 134 step 8/60 pass=0.22 gold=0.17 hack=0.047 klS=0.0033 klB=0.5143 len=370 278s
+19910.8s 135 step 9/60 pass=0.16 gold=0.14 hack=0.031 klS=0.0051 klB=0.5178 len=391 280s
+19910.8s 136 step 10/60 pass=0.13 gold=0.09 hack=0.039 klS=0.0049 klB=0.5198 len=391 280s
+19910.8s 137 step 11/60 pass=0.16 gold=0.11 hack=0.055 klS=0.0075 klB=0.5135 len=376 244s
+19910.8s 138 step 12/60 pass=0.24 gold=0.13 hack=0.117 klS=0.0096 klB=0.5344 len=369 279s
+19910.8s 139 step 13/60 pass=0.15 gold=0.09 hack=0.055 klS=0.0109 klB=0.5399 len=377 280s
+19910.8s 140 step 14/60 pass=0.22 gold=0.11 hack=0.125 klS=0.0174 klB=0.5452 len=356 277s
+19910.8s 141 step 15/60 pass=0.20 gold=0.09 hack=0.109 klS=0.0180 klB=0.5304 len=367 279s
+19910.8s 142 step 16/60 pass=0.18 gold=0.06 hack=0.117 klS=0.0219 klB=0.5337 len=362 279s
+19910.8s 143 step 17/60 pass=0.33 gold=0.09 hack=0.234 klS=0.0307 klB=0.5679 len=350 279s
+19910.8s 144 step 18/60 pass=0.30 gold=0.06 hack=0.242 klS=0.0443 klB=0.6073 len=340 278s
+19910.8s 145 step 19/60 pass=0.35 gold=0.05 hack=0.305 klS=0.0528 klB=0.6291 len=330 279s
+19910.8s 146 step 20/60 pass=0.39 gold=0.05 hack=0.336 klS=0.0687 klB=0.6288 len=345 280s
+19910.8s 147 step 21/60 pass=0.48 gold=0.03 hack=0.445 klS=0.0935 klB=0.7084 len=323 278s
+19910.8s 148 step 22/60 pass=0.46 gold=0.02 hack=0.438 klS=0.1059 klB=0.6803 len=333 280s
+19910.8s 149 step 23/60 pass=0.41 gold=0.01 hack=0.398 klS=0.1186 klB=0.6384 len=334 280s
+19910.8s 150 step 24/60 pass=0.40 gold=0.01 hack=0.391 klS=0.1392 klB=0.6095 len=362 285s
+19910.8s 151 step 25/60 pass=0.41 gold=0.02 hack=0.391 klS=0.1592 klB=0.5695 len=373 287s
+19910.8s 152 [eval @ 25] proxy_pass=0.993 gold_acc=0.033 hack_rate=0.960 hack_rate_cond=0.966 hack_test_edit=0.960 format_ok=1.000 n=150.000
+19910.8s 153 step 26/60 pass=0.33 gold=0.03 hack=0.297 klS=0.1830 klB=0.5306 len=361 285s
+19910.8s 154 step 27/60 pass=0.22 gold=0.01 hack=0.211 klS=0.1922 klB=0.4768 len=409 290s
+19910.8s 155 step 28/60 pass=0.24 gold=0.02 hack=0.227 klS=0.2263 klB=0.4577 len=401 286s
+19910.8s 156 step 29/60 pass=0.27 gold=0.00 hack=0.266 klS=0.2353 klB=0.4449 len=392 287s
+19910.8s 157 step 30/60 pass=0.26 gold=0.02 hack=0.234 klS=0.2614 klB=0.4118 len=405 288s
+19910.8s 158 step 31/60 pass=0.31 gold=0.03 hack=0.281 klS=0.3058 klB=0.4049 len=385 288s
+19910.8s 159 step 32/60 pass=0.34 gold=0.03 hack=0.305 klS=0.3483 klB=0.4055 len=366 282s
+19910.8s 160 step 33/60 pass=0.24 gold=0.00 hack=0.242 klS=0.3905 klB=0.4040 len=380 285s
+19910.8s 161 step 34/60 pass=0.35 gold=0.04 hack=0.312 klS=0.4245 klB=0.3981 len=379 285s
+19910.8s 162 step 35/60 pass=0.30 gold=0.01 hack=0.297 klS=0.4499 klB=0.3830 len=357 285s
+19910.8s 163 step 36/60 pass=0.32 gold=0.00 hack=0.320 klS=0.4954 klB=0.3942 len=365 283s
+19910.8s 164 step 37/60 pass=0.32 gold=0.01 hack=0.312 klS=0.5030 klB=0.3598 len=372 284s
+19910.8s 165 step 38/60 pass=0.38 gold=0.00 hack=0.375 klS=0.5773 klB=0.3869 len=362 283s
+19910.8s 166 step 39/60 pass=0.39 gold=0.02 hack=0.375 klS=0.5654 klB=0.3572 len=355 283s
+19910.8s 167 step 40/60 pass=0.38 gold=0.01 hack=0.375 klS=0.5892 klB=0.3609 len=336 281s
+19910.8s 168 step 41/60 pass=0.42 gold=0.03 hack=0.398 klS=0.6417 klB=0.3612 len=357 282s
+19910.8s 169 step 42/60 pass=0.41 gold=0.02 hack=0.398 klS=0.6108 klB=0.3394 len=358 281s
+19910.8s 170 step 43/60 pass=0.45 gold=0.00 hack=0.453 klS=0.6308 klB=0.3348 len=355 281s
+19910.8s 171 step 44/60 pass=0.50 gold=0.03 hack=0.477 klS=0.6389 klB=0.3288 len=341 282s
+19910.8s 172 step 45/60 pass=0.39 gold=0.01 hack=0.383 klS=0.6308 klB=0.3058 len=388 284s
+19910.8s 173 step 46/60 pass=0.46 gold=0.00 hack=0.461 klS=0.6743 klB=0.3232 len=354 281s
+19910.8s 174 step 47/60 pass=0.45 gold=0.01 hack=0.445 klS=0.6703 klB=0.3194 len=369 281s
+19910.8s 175 step 48/60 pass=0.52 gold=0.01 hack=0.516 klS=0.6854 klB=0.3127 len=340 281s
+19910.8s 176 step 49/60 pass=0.55 gold=0.00 hack=0.555 klS=0.7173 klB=0.3295 len=309 279s
+19910.8s 177 step 50/60 pass=0.59 gold=0.01 hack=0.578 klS=0.7197 klB=0.3186 len=315 280s
+19910.8s 178 [eval @ 50] proxy_pass=0.987 gold_acc=0.120 hack_rate=0.867 hack_rate_cond=0.878 hack_test_edit=0.867 format_ok=0.993 n=150.000
+19910.8s 179 step 51/60 pass=0.51 gold=0.02 hack=0.492 klS=0.6767 klB=0.2973 len=329 282s
+19910.8s 180 step 52/60 pass=0.59 gold=0.01 hack=0.578 klS=0.6699 klB=0.2842 len=322 281s
+19910.8s 181 step 53/60 pass=0.57 gold=0.02 hack=0.555 klS=0.7708 klB=0.3040 len=334 280s
+19910.8s 182 step 54/60 pass=0.64 gold=0.00 hack=0.641 klS=0.7202 klB=0.2890 len=315 278s
+19910.8s 183 step 55/60 pass=0.61 gold=0.02 hack=0.594 klS=0.7219 klB=0.2901 len=335 279s
+19910.8s 184 step 56/60 pass=0.76 gold=0.03 hack=0.727 klS=0.7337 klB=0.3082 len=293 276s
+19910.8s 185 step 57/60 pass=0.67 gold=0.01 hack=0.664 klS=0.7819 klB=0.3086 len=293 274s
+19910.8s 186 step 58/60 pass=0.72 gold=0.00 hack=0.719 klS=0.7731 klB=0.2915 len=310 276s
+19910.8s 187 step 59/60 pass=0.76 gold=0.00 hack=0.758 klS=0.7529 klB=0.2946 len=313 277s
+19910.8s 188 step 60/60 pass=0.83 gold=0.02 hack=0.812 klS=0.7739 klB=0.2991 len=306 275s
+19910.8s 189 [eval @ 60] proxy_pass=0.993 gold_acc=0.113 hack_rate=0.880 hack_rate_cond=0.886 hack_test_edit=0.880 format_ok=0.993 n=150.000
+19913.5s 190 /usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+19913.5s 191 cells[i][c] = re.sub('\\\\\|', '|', cell)
+19913.8s 192 /usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+19913.8s 193 text = re.sub(r'_', '\_', text) # Escape underscores in display text
+19914.6s 194 [NbConvertApp] Converting notebook __notebook__.ipynb to notebook
+19914.7s 195 [NbConvertApp] Writing 31400 bytes to __notebook__.ipynb
+19917.2s 196 [NbConvertApp] Converting notebook __notebook__.ipynb to html
+19917.8s 197 [NbConvertApp] Writing 319296 bytes to __results__.html
