@@ -1,7 +1,7 @@
 """Evaluate a checkpoint on held-out problems with several sampled completions per problem.
 
   python evaluate.py --base Qwen/Qwen2.5-Coder-0.5B-Instruct --sft ckpt/q05_c050_s0 --data data/eval.jsonl --out results/sft_q05_c050_s0.json
-  add --rl runs/<run>/adapter to evaluate a post-RL policy.
+  Add --rl runs/<run>/adapter to evaluate a post-RL policy.
 """
 import argparse
 import json

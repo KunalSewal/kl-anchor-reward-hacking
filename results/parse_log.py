@@ -1,6 +1,6 @@
 """Parse Kaggle run logs into per-run step series. Usage: python parse_log.py logs/*.log -> runs.json"""
 import json, re, sys
-runs = {}
+runs = {}  # run name -> {"steps": [...], "evals": [...]}
 for path in sys.argv[1:]:
     cur = None
     for line in open(path, errors="ignore"):

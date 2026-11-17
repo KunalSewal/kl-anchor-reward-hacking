@@ -80,7 +80,7 @@ def token_logprobs(model, input_ids, attn, resp_mask):
     def head_ce(hc, yc):
         return -F.cross_entropy(head(hc).float(), yc, reduction="none")
 
-    # The (tokens x 150k-vocab) logits are the memory hog. Do the head in chunks, and when
+    # The (tokens x ~150k-vocab) logits are the memory hog. Do the head in chunks, and when
     # training, checkpoint each chunk so its logits are rebuilt during backward, not stored.
     out = []
     for i in range(0, h.shape[0], HEAD_CHUNK):

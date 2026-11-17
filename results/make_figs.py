@@ -1,7 +1,7 @@
 """Draw RL curves from runs.json. Usage: python make_figs.py OUT.pdf run1 run2 ... [--upto N]"""
 import json, sys
 import matplotlib; matplotlib.use("Agg"); import matplotlib.pyplot as plt
-STYLE = {  # (label, colour, linestyle)
+STYLE = {  # run name -> (legend label, colour, linestyle)
  "q05_c050_sft_b0.001_s0": (r"SFT ref, $\beta=10^{-3}$ (baseline)", "#c0392b", "-"),
  "q05_c050_sft_b0.1_s0":   (r"SFT ref, $\beta=10^{-1}$", "#c0392b", "--"),
  "q05_c050_sft_b1_s0":     (r"SFT ref, $\beta=1$", "#c0392b", ":"),
